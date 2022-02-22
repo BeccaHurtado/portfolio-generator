@@ -1,5 +1,5 @@
 // allows the app.js file to access the fs module's functions through the fs assignment
-const fs = require('fs');
+const { writeFile, copyFile } = require('./utils/generate-site.js');
 const inquirer = require('inquirer');
 const generatePage = require('./src/page-template.js');
 
@@ -137,16 +137,21 @@ const promptProject = portfolioData => {
 promptUser()
 .then(promptProject)
 .then(portfolioData => {
-    const pageHTML = generatePage(portfolioData);
-   
-// // First argument is the file created, or the output file. The second argument is the data that's being written: The HTML string template. The third argument is the callback function that will handle any error as well as the success message.
-fs.writeFile('./index.html', pageHTML, err => {
-    // If an error exist, an error message is displayed using the following statement:
-    if (err) throw err;
-    // logged if ran successfully
-    console.log('Portfolio complete! Checkout index.html to see the output!');
+    return generatePage(portfolioData);
 })
-});
+.then(pageHTML => {
+    return writeFile(pageHTML);
+})
+.then(witeFileResponse => {
+    console.log(witeFileResponse);
+    return copyFile();
+})
+.then(copyFileResponse => {
+    console.log(copyFileResponse);
+})
+.catch(err => {
+    console.log(err);
+})
     
 
 
